@@ -12,6 +12,7 @@ use Net::OpenSSH;
 
 my $user = 'admin';
 my $password = 'AAbbccddee11!!';
+my $bool = 'true';
 my @avamarList = (#'a4dpe303.asl.lab.emc.com',
 
                'a4dpn226d3.asl.lab.emc.com',
@@ -25,15 +26,17 @@ my @avamarList = (#'a4dpe303.asl.lab.emc.com',
 
                #'dpe113.asl.lab.emc.com',
               );
-
+my $outfile = '/home/qauser/vcenter.txt';
+open(OUTFILE,">$outfile");
 foreach my $server (@avamarList){
-    print "Server $server manage:\n";
-    my $ssh = Net::OpenSSH->new("$user\@$server",password=>$password) ;
+    print OUTFILE "Server $server manage:\n";
+    my $ssh = Net::OpenSSH->new("$user\@$server",master_opts => [-o => "StrictHostKeyChecking=no"],password=>$password) ;
     $ssh->error and die "Could not establish ssh connection: " . $ssh->error;
     my @output = $ssh->capture('mcserver.sh --status | grep "^vCenter"');
     print "@output\n";
     chomp(@output);
     foreach my $vcenter (@output) {
-        print "$vcenter\n";
+        print OUTFILE "$vcenter\n";
     }
 }
+close(OUTFILE);
