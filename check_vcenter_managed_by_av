@@ -38,5 +38,6 @@ foreach my $server (@avamarList){
     foreach my $vcenter (@output) {
         print OUTFILE "$vcenter\n";
     }
+    print OUTFILE "\n";
 }
 close(OUTFILE);
